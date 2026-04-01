@@ -6,230 +6,142 @@
     <title>SportLink - Willow Cricbuzz</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
             min-height: 100vh;
             color: #fff;
         }
-
-        /* HEADER */
         .header {
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(10,10,10,0.98);
             padding: 0 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 3px solid #e8000d;
-            box-shadow: 0 4px 30px rgba(232, 0, 13, 0.3);
+            box-shadow: 0 4px 30px rgba(232,0,13,0.3);
             height: 70px;
         }
-
         .logo-container { display: flex; align-items: center; gap: 6px; }
-
-        .logo-sport {
-            font-size: 30px; font-weight: 900; color: #ffffff;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .logo-link {
-            font-size: 30px; font-weight: 900; color: #e8000d;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .header-right {
-            display: flex; align-items: center; gap: 20px;
-        }
-
+        .logo-sport { font-size: 30px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-link  { font-size: 30px; font-weight: 900; color: #e8000d; text-transform: uppercase; letter-spacing: 1px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
         .live-badge {
-            background: #e8000d;
-            padding: 7px 18px; border-radius: 4px;
+            background: #e8000d; padding: 7px 18px; border-radius: 4px;
             font-size: 13px; font-weight: 700; letter-spacing: 2px;
             animation: glow 2s infinite;
             display: flex; align-items: center; gap: 7px;
         }
-
-        .live-dot-header {
-            width: 8px; height: 8px; background: #fff;
-            border-radius: 50%; animation: pulse 1.5s infinite;
-        }
-
+        .live-dot-header { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(232,0,13,0.5); }
-            50% { box-shadow: 0 0 25px rgba(232,0,13,0.9); }
+            0%,100%{ box-shadow: 0 0 10px rgba(232,0,13,.5); }
+            50%    { box-shadow: 0 0 25px rgba(232,0,13,.9); }
         }
-
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.4); }
+            0%,100%{ opacity:1; transform:scale(1);   }
+            50%    { opacity:.4; transform:scale(1.4); }
         }
-
-        /* SUB HEADER */
         .sub-header {
-            background: linear-gradient(90deg, #e8000d 0%, #b30000 100%);
-            padding: 10px 40px;
-            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(90deg,#e8000d,#b30000);
+            padding: 10px 40px; display: flex; align-items: center; gap: 14px;
         }
-
-        .cricket-icon {
-            font-size: 20px;
-        }
-
-        .sub-title {
-            font-size: 15px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 3px;
-            color: #fff;
-        }
-
-        .sub-divider {
-            width: 1px; height: 16px;
-            background: rgba(255,255,255,0.4);
-        }
-
-        .sub-desc {
-            font-size: 13px; color: rgba(255,255,255,0.85);
-            letter-spacing: 1px;
-        }
-
-        /* CONTAINER */
+        .cricket-icon { font-size: 20px; }
+        .sub-title { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+        .sub-divider { width: 1px; height: 16px; background: rgba(255,255,255,.4); }
+        .sub-desc { font-size: 13px; color: rgba(255,255,255,.85); letter-spacing: 1px; }
         .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
-
-        /* VIDEO CARD */
         .video-section {
-            background: rgba(255,255,255,0.04);
-            border-radius: 14px; overflow: hidden;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
-            border: 1px solid rgba(232,0,13,0.25);
+            background: rgba(255,255,255,.04); border-radius: 14px; overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,.8);
+            border: 1px solid rgba(232,0,13,.25);
         }
-
         .video-header {
-            background: rgba(0,0,0,0.6);
-            padding: 16px 28px;
+            background: rgba(0,0,0,.6); padding: 16px 28px;
             display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(232,0,13,0.2);
+            border-bottom: 1px solid rgba(232,0,13,.2);
         }
-
         .video-title-group { display: flex; flex-direction: column; gap: 4px; }
-
-        .video-title {
-            font-size: 18px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; color: #fff;
-        }
-
-        .video-subtitle {
-            font-size: 13px; color: rgba(255,255,255,0.55);
-            letter-spacing: 1px;
-        }
-
+        .video-title { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .video-subtitle { font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: 1px; }
         .live-indicator {
             display: flex; align-items: center; gap: 9px;
-            background: rgba(232,0,13,0.15);
-            padding: 8px 18px; border-radius: 6px;
-            border: 1px solid rgba(232,0,13,0.5);
+            background: rgba(232,0,13,.15); padding: 8px 18px; border-radius: 6px;
+            border: 1px solid rgba(232,0,13,.5);
         }
-
-        .live-dot {
-            width: 10px; height: 10px; background: #e8000d;
-            border-radius: 50%; animation: pulse 1.5s infinite;
-            box-shadow: 0 0 8px #e8000d;
-        }
-
+        .live-dot { width: 10px; height: 10px; background: #e8000d; border-radius: 50%; animation: pulse 1.5s infinite; box-shadow: 0 0 8px #e8000d; }
         .live-text { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #e8000d; }
 
-        /* IFRAME */
-        .iframe-wrapper {
+        /* ── VIDEO WRAPPER ── */
+        .player-shell {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
             background: #000;
         }
-
-        .iframe-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0;
+        .player-shell iframe {
+            position: absolute; inset: 0;
             width: 100%; height: 100%;
-            border: none;
+            border: none; display: block;
         }
 
-        /* CONTROLS */
+        /* Opaque block that sits OVER the iframe to cover the watermark */
+        .logo-block {
+            position: absolute;
+            top: 0; right: 0;
+            width: 220px;          /* wide enough to hide the watermark */
+            height: 80px;
+            background: #000;      /* solid black cover */
+            z-index: 10;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 10px;
+            pointer-events: none;
+        }
+        .logo-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e8000d;
+            box-shadow: 0 0 20px rgba(232,0,13,.8), 0 0 6px #000;
+        }
+
         .controls {
-            padding: 18px 28px;
-            background: rgba(0,0,0,0.5);
+            padding: 18px 28px; background: rgba(0,0,0,.5);
             display: flex; gap: 12px; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(255,255,255,.06);
         }
+        .btn { padding:10px 22px; border:none; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; transition:all .25s; color:#fff; text-transform:uppercase; letter-spacing:1px; }
+        .btn-primary  { background:#e8000d; box-shadow:0 4px 15px rgba(232,0,13,.35); }
+        .btn-primary:hover  { background:#ff1a24; box-shadow:0 6px 20px rgba(232,0,13,.55); transform:translateY(-2px); }
+        .btn-secondary{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); }
+        .btn-secondary:hover{ background:rgba(255,255,255,.18); transform:translateY(-2px); }
+        .spacer { flex:1; }
+        .stream-info { font-size:12px; color:rgba(255,255,255,.4); letter-spacing:1px; }
+        .footer { text-align:center; padding:30px 20px; color:rgba(255,255,255,.25); font-size:12px; letter-spacing:1px; }
+        .footer span { color:#e8000d; }
 
-        .btn {
-            padding: 10px 22px; border: none; border-radius: 6px;
-            font-size: 13px; font-weight: 700; cursor: pointer;
-            transition: all 0.25s ease;
-            color: white; text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: #e8000d;
-            box-shadow: 0 4px 15px rgba(232,0,13,0.35);
-        }
-
-        .btn-primary:hover { background: #ff1a24; box-shadow: 0 6px 20px rgba(232,0,13,0.55); transform: translateY(-2px); }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .btn-secondary:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
-
-        .btn:active { transform: translateY(0); }
-
-        .spacer { flex: 1; }
-
-        .stream-info {
-            font-size: 12px; color: rgba(255,255,255,0.4);
-            letter-spacing: 1px;
-        }
-
-        /* FOOTER */
-        .footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: rgba(255,255,255,0.25);
-            font-size: 12px; letter-spacing: 1px;
-        }
-
-        .footer span { color: #e8000d; }
-
-        @media (max-width: 768px) {
-            .header { padding: 0 16px; }
-            .sub-header { padding: 10px 16px; }
-            .logo-sport, .logo-link { font-size: 22px; }
-            .sub-title { font-size: 12px; letter-spacing: 2px; }
-            .sub-desc { display: none; }
-            .sub-divider { display: none; }
-            .container { margin: 16px auto; padding: 0 12px; }
-            .controls { flex-wrap: wrap; padding: 14px 16px; gap: 10px; }
-            .btn { padding: 9px 16px; font-size: 12px; }
-            .stream-info { display: none; }
+        @media(max-width:768px){
+            .header,.sub-header{ padding-left:16px; padding-right:16px; }
+            .logo-sport,.logo-link{ font-size:22px; }
+            .sub-desc,.sub-divider{ display:none; }
+            .container{ margin:16px auto; padding:0 12px; }
+            .controls{ flex-wrap:wrap; padding:14px 16px; gap:10px; }
+            .btn{ padding:9px 16px; font-size:12px; }
+            .stream-info{ display:none; }
+            .logo-block{ width:160px; height:60px; }
+            .logo-img{ width:110px; height:110px; }
         }
     </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
     <div class="logo-container">
         <span class="logo-sport">Sport</span><span class="logo-link">Link</span>
     </div>
     <div class="header-right">
-        <div class="live-badge">
-            <div class="live-dot-header"></div>
-            LIVE
-        </div>
+        <div class="live-badge"><div class="live-dot-header"></div>LIVE</div>
     </div>
 </div>
 
-<!-- SUB HEADER -->
 <div class="sub-header">
     <span class="cricket-icon">🏏</span>
     <span class="sub-title">Willow Cricbuzz</span>
@@ -237,7 +149,6 @@
     <span class="sub-desc">Live Cricket Streaming</span>
 </div>
 
-<!-- MAIN -->
 <div class="container">
     <div class="video-section">
 
@@ -252,19 +163,24 @@
             </div>
         </div>
 
-        <div class="iframe-wrapper" id="iframeWrapper">
+        <div class="player-shell" id="playerShell">
             <iframe
                 id="streamFrame"
-                src="https://dadocric.st/player.php?id=willow"
+                src="https://allinone-reborn.pages.dev/willonew"
                 allowfullscreen
                 allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                 scrolling="no"
                 frameborder="0">
             </iframe>
+
+            <!-- Covers the "All In One Reborn" watermark in top-right -->
+            <div class="logo-block">
+                <img class="logo-img" src="data:image/jpeg;base64,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" alt="Logo" />
+            </div>
         </div>
 
         <div class="controls">
-            <button class="btn btn-primary" onclick="enterFullscreen()">⛶ &nbsp;Fullscreen</button>
+            <button class="btn btn-primary"   onclick="enterFullscreen()">⛶ &nbsp;Fullscreen</button>
             <button class="btn btn-secondary" onclick="reloadStream()">↺ &nbsp;Reload</button>
             <div class="spacer"></div>
             <div class="stream-info">sportlink.live · willow cricbuzz</div>
@@ -273,42 +189,20 @@
     </div>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">
-    &copy; 2025 <span>SportLink</span> &nbsp;·&nbsp; Willow Cricbuzz &nbsp;·&nbsp; All rights reserved
-</div>
+<div class="footer">&copy; 2025 <span>SportLink</span> &nbsp;·&nbsp; Willow Cricbuzz &nbsp;·&nbsp; All rights reserved</div>
 
 <script>
-    function reloadStream() {
-        const frame = document.getElementById('streamFrame');
-        frame.src = frame.src;
+    function reloadStream(){
+        const f = document.getElementById('streamFrame');
+        f.src = f.src;
     }
-
-    function enterFullscreen() {
-        const wrapper = document.getElementById('iframeWrapper');
-        const frame = document.getElementById('streamFrame');
-
-        const req = wrapper.requestFullscreen
-            || wrapper.webkitRequestFullscreen
-            || wrapper.mozRequestFullScreen
-            || wrapper.msRequestFullscreen;
-
-        if (req) {
-            req.call(wrapper).catch(() => {
-                const req2 = frame.requestFullscreen
-                    || frame.webkitRequestFullscreen
-                    || frame.mozRequestFullScreen
-                    || frame.msRequestFullscreen;
-                if (req2) req2.call(frame).catch(() => {});
-            });
-        }
+    function enterFullscreen(){
+        const w = document.getElementById('playerShell');
+        const f = document.getElementById('streamFrame');
+        const go = el => (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen||function(){}).call(el);
+        go(w) || go(f);
     }
-
-    // First click inside player auto-triggers fullscreen
-    document.getElementById('iframeWrapper').addEventListener('click', function () {
-        setTimeout(enterFullscreen, 300);
-    }, { once: true });
+    document.getElementById('playerShell').addEventListener('click', ()=>{ setTimeout(enterFullscreen,300); }, {once:true});
 </script>
-
 </body>
 </html>
