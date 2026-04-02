@@ -82,25 +82,57 @@
             border: none; display: block;
         }
 
-        /* Opaque block that sits OVER the iframe to cover the watermark */
+        /* Watermark blocker - only visible in normal mode, hidden in fullscreen */
         .logo-block {
             position: absolute;
             top: 0; right: 0;
-            width: 220px;          /* wide enough to hide the watermark */
-            height: 80px;
-            background: #000;      /* solid black cover */
+            width: 200px;
+            height: 70px;
+            background: #000;
             z-index: 10;
-            display: flex; align-items: center; justify-content: flex-end;
-            padding-right: 10px;
             pointer-events: none;
         }
-        .logo-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #e8000d;
-            box-shadow: 0 0 20px rgba(232,0,13,.8), 0 0 6px #000;
+
+        /* SportLink logo watermark - small, bottom right, semi-transparent */
+        .sportlink-watermark {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            z-index: 15;
+            pointer-events: none;
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+        
+        .watermark-text {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .watermark-sport { color: #fff; }
+        .watermark-link { color: #e8000d; }
+
+        /* Hide watermark blocker in fullscreen, keep SportLink watermark */
+        .player-shell:fullscreen .logo-block,
+        .player-shell:-webkit-full-screen .logo-block,
+        .player-shell:-moz-full-screen .logo-block,
+        .player-shell:-ms-fullscreen .logo-block {
+            display: none;
+        }
+
+        /* Make SportLink watermark more visible in fullscreen */
+        .player-shell:fullscreen .sportlink-watermark,
+        .player-shell:-webkit-full-screen .sportlink-watermark,
+        .player-shell:-moz-full-screen .sportlink-watermark,
+        .player-shell:-ms-fullscreen .sportlink-watermark {
+            opacity: 0.6;
+            bottom: 20px;
         }
 
         .controls {
@@ -126,8 +158,9 @@
             .controls{ flex-wrap:wrap; padding:14px 16px; gap:10px; }
             .btn{ padding:9px 16px; font-size:12px; }
             .stream-info{ display:none; }
-            .logo-block{ width:160px; height:60px; }
-            .logo-img{ width:110px; height:110px; }
+            .logo-block{ width:150px; height:55px; }
+            .sportlink-watermark{ bottom: 70px; right: 10px; }
+            .watermark-text{ font-size: 12px; }
         }
     </style>
 </head>
@@ -173,9 +206,14 @@
                 frameborder="0">
             </iframe>
 
-            <!-- Covers the "All In One Reborn" watermark in top-right -->
-            <div class="logo-block">
-                <img class="logo-img" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAB4AFEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5tUp/eX86lUr/AH1/OmrGn90flUyRgsqqgLE4Ax3rxWz9BhFj4Nv3Qykn3ptxeWttxLKu7GdqnJp013Y6XNm4DO4XOxV6HsM9jXMsxnjYmAR5YtuJAZj7k1rRw/PrLY8zHZv7H3KVmzobfU7eTOYZdx4UAjk9uasx3Fu6bt+w91Ycg+lcpbPLEd6xHylOGZkHJ9iDzWnBMWDTwRHBX5t2EBHfqf1raeDh0OCjnuIT9/VG35kQPMi16b4XliT4CeLX3ja+p2S5+m415Nb6tbQoBIzyWwOPMZwzxn0Yf1Fer6MwHwJ14qQRJrFpgjoRtc15tanKm7NHvLF08VCLg+sdO2p5lNNBuP7z9DTBNF2LH/gJq3Kq56UgUelCkrHe4vuQedH/ALf/AHwaKtcUUuYLPuZadan2utlNMhAORHu7oDks34AEfjUK0Xd0YNKu4eCJwqkHocHpXRBXmjzsbJxw0muxyk90Lm8ZncrGW+UYzj0z6n3pZpGj8qKRf3YGMA8HnmqtzFsmYJkjNbPhbTP7WvkgupGihXrJszx+NevokfEaydie1gl1Hy40CCKMFgoUk49MVrrZazeIqCxu1QR4jGwhQMcfLwM/X9a9X8I+DbG0ezvLCeOeaJld9+AZMN90DoOCfrgV9HeGNJ0h4CrW0QCgFcxqSDXnzxdpWSPThgfcu2fEcXgPxHpttJq/kI9mFVZXZMD5umR0yDj6ZFei+G7GeP4BX9rEDNIdbt0AUZLHY5wB3619HeK9P06+06bTmgDCWNklGBjGDzXiHw9F/Z+AtaEcSmLTDdX6yk8+ciCNOPbzCfriuKriJVdGephqMMPBSj8V1+ZwVzoenaXJ5Ovas0F1/Ha2kPnvH7OSwUH2yTSXvh+F9Kl1XRNQGpWcGPtKmIxzW+eAXQ5+UnjcCRn0rnpHZ5Gd2LMxJYk5JPrXafB2SAeOrG1vZFjsb5Xs7sufl8qRSpz7A4P1ArN6HszU4Rc+a9unT/M5DafSiu3/AOEAu/8Anqfyopaj+uUP5jzFadJCbiJ4FRndxhFXqzdh+PT8agWXn/UyD8KtWd49tcxXMMcgkidZEJHRgcj+VdWqd0ZSUakHB9TRt/AV9aIt5PLbTiMfvxHu3xnoThgNwHOSuQDXWeEvDVrc3Uv2iLCIuRtGN2Omfau/u4v+Et8I213pLrbBxJdqkcQY78DKbjyAp3ZA54HY1g6FdwaVrE9r5hkjXPlsF2kj1I7fShYic4u+54lTB06NRJbGrBr2h+Hymn3MF0xB+VLeIySfXPb866HS/jVoGhzRLqGj6pCkhKgyhSSPoCfyq5Z+F9I8WaMIJIY47onY8iEq/sRjHGCOhqK2+Ctrp9vcvqf9lW9q2wlihO7GQvLn5c5P196iMqdrtDnCpeyehueKPit4etfCKa3plm9zPfN9ntImXBZ+Ac/TIrwhZ9ct9FvNWe7uH0u+Nxavs3Rr5xIJDJ2B7D/Zr6FsNA0TUNBTwyYJYk08i4hkVdjdMnHqCB+grzD4r2WneHPAeo6PbySTwPri3NuyRkrtki3AZ6ZGTx6YrJzSWiN6dC80pPqv+CeMbfm613Xwijvh4jeWytnl2QAuVTcFIkR1/MpiuCW4i3Y2y/8AfBr6V/ZL8P2uqaRqFxKXTzroR5xg4RQcfm1Zu+zR6+PnGOHk7nuv/CX6d/eb/wABW/woq9/wg+kf35f++qK9Dkq9n+B8T+67n5qrUgqFDXS+D9HS8uxfalE40y2Uyy9jNjGI1z3YkD2GawqSUE2z7qjFzait2dP8J9Q1XTm1iyQiaGDTxfNZyepKhWB/hO0k8fjXLeIfEtyNVh1GSJbaS55aHoIyGOMe3IrqdG1D+0PGl/qMCpZvdxNG0K9NoH3Py/lXMfFDSDLai7tsGSPjH+zSwklKSb6nkZzCcJyj2On8HfEaWO6tLXdK0/nBI8HCnPb8K0fFnxc1TxN52ixWE9xBEMRgbiwIOd+OxOPyr5/t764s7uOVXZXhYOoHsa9p8IeMvD+rafZWfiXTLG6u4l2JMyBcp2XeO4yeDwRXdPDqHvJXPFpYp1HySlYhXV/iVFOb671PV7SKGJt7XzbURSQARnk8kDjNdB4ikMnwR064R5JVk1jJdzuKhYAoBPt0rK+K3iHSn0qTTtH8NnT/ADJY088nmSNW3Nx/dBHbjmr+nWaz/DLSwPPcXN3eRmMN8gIjBU49cnr9K48StE7WPTwUoxndyvZrfzv/AMA86D/vBXtnwW+JeieDfCktteTXS3ou2mjWKEsCpVR1/A14e6yRStHKjJIpwysMEH0NPD4XrXNKNz6CrSjVjyy2Pqr/AIaX0v8A5977/v0tFfKe80UWl3OT+y8N/KdVY+H9K0hYnmmttXu5xiNAQI1IOG4bHQ45/IVpa5PamxZ/OIuF2wtaMu50ILZ2BR3Bzj0ANefz3cjiSW4diIxv688f09qnTxPqqMYLGcWgLEsUGWdsYBYnOeD/AC9K9CplU6j3/T/P8jDDcR0MPH3l6W1/Vfi7eQs99NpeskS7redGHzZyCexHqK7dbqw1jS/P3KCy4kQnO1h1H0rhppVv/D6JqGDdWx8ouxyWQ/cb8DlT/wABqPwnI9pqkdncsqwTMF3bsLnsfbH8jVLBuMGuqOTHYyNZxmndS1Xo+j9HdetzO8V6NZQyM0QKlicKOfyrOlsdR0Q2jXESyR3Sl44g3z4HXI7GvYbDwLc3Osmae33Rq+3cTkZ61xPxm0y403xnatM2IoljjGOAM5Jq8PX5pKFzyMRh0o87Ri6emtX1yguSlpFEmSZ32sI+MlVPPpXrlrfWi/Dix0mC8ie6t725aRI35X5Yypx1wR0NeOanqequthZfa5kKr5TFTgleD169v0FVn1DUbfU0vkmeNWfy2ZSAWXtuPc89TWssHUqvmk7WLlisLRg6VNN3s23Y7LxRuPiC7durMGP4qDWaehqvp19calIDMHed+ueSeuP0FWT0rza1GVGXLI+rwWIp4iipU3e2nzGbhRS49qKzOmzJ9YkW+vJr2Gzt7USMW+z24IjUH+FcknH1JrHSLF3E4ORIu3PuOn6E1cgkFowXcWt3+4e6H+6fb0qC5lVNQQLyrtuXnvg5r7GSW5+WphdvmGWQqW2D94o/iQ9f05HutZ0dxBYkC41NJoDyqRKZHA7egH0Jr2e1+FUP9o2iXd7f20N3pkt7b3awJJBdKkAmwhDDHO9SCcjj14w774d2F1oN7rmn6tHeQWjR/b7cWhSVIGVCbhRuO5VMigjg81yTjzS5oysddOvyQ5ZRv23+e1jR+HnxqsdPsP7O1HS767+zbTFIWQOUxj5vXH5+5qbx9b6F4ruNb1C4uPKtHsEuLKQ4BWQ7No/IsD+NcJ4T0O3bxjPpNzIGkhElqzlceYFyVf8AED9Kra1cTyXVnou9jZwkO+D94DlQfbkfmK8hUXDGezhva59BaFTLViqu3M42XWyul+Wva5km6tJ7tbS10uVxbxf8fMkrea59dvQDPbGcd6hlsC9pKmOVB/PqK9u/Zh0i3l8Ra9dXsMT28kUVo7uAxjyrOWx1/h/nwaX4t6GPDfgifQtHt1vYLe9m1DUJ1tyHtCwCRxvjhMcjbknJ7c16UKsadR03+LPnq0pVVzNJeiS/L9Tx+yLRRwXMTFJdiyhh/CeoP51qXrWgaKYXkBM8SysAcFGP3lI7EEH8MViRzpDiKQgiOJBgH0UH+f8AnmtCztL3+yI7+a1AspZmSKZuruACwA9B/WozOlGdJT6o9Xh7Eyp4h0ltJfiiTzLb/n5i/wC+qKi2p/zzX8qK+fsj7fml5GZ5x2PbuzZI+7INrj/H6issXjtfxB2wYuD9eld74zvPC+smM6BoTadDG0h2u2S6sdyk89VyRkY4xXnV6nlauUGcEg896+uk3pc/K0j6O0K/8R6Nb21jp2i/aNOuXV3ga/zGrSQvC/l/KPJJ3u5znG0dQOY9BTV9Bl03VdP0O9mEbSfaYZ5YzHcWhjjikhccHcQvpjJ45U146uranFav5V9cgTIUcLKRuUnJB9sk1s6Z4v8AEccTeXrN4GbG/MmckDAP5VPKO4l1c3dp8TJojYtZ3f2540iL7wqux+QsPvYzwR1BrE124iXxBeyF9oE7JHAmS52nAH4Yp02pXU2tQaleStNPC67ZHYsTtAC5OcnAA/Kq98PLe5u2O+5nckHHQse351mqT9t7Tyt+J1vEr6kqF/tc34JHU+AfEstsSs0LyuL2O5t1TaqpIAUyzE9MMOCDz6V2+ty3ni3xVPpt1oNy95qkkbtc+dIouIN2ZHCblQjg4OCRjHWvLPD01xb38Npp1lFdzyoIBHLCJg5LA8L3OQMV1Uz+I9ctb/xNqXiPSdEe1iezhtnmFrK4XqqRRrk5YkZPU554rGrQbnzbGMalo8pxj2UP9qXxGJFS4eNXIOGVTtBA/Ct6zuZJvB09ngmKzvo5E/2RIjgj81BqhoejarLGiWOn3lzCThZfJOHPcg9OvvUuoWmr6M8lheW11bW88qs6SQlQXUMF59tzce9Xi+WeHaT1sdWVydHGx5u9v0IM+9FNwaK+c0P0G7PS9L+DFwbcSvr0CHphYZH5/FhmvO/Hvg99C8b6Vpb3SXK3JXEips6vgg5zRRXpYfGVqlTlk9D4bE4SlSp3iju30vQ7y48QXtmbT7Jf26LAGa13wSC6SOQqAQI+5XHJU5PBNVrzUNOhl1fSI9C0LyvDv72C5FtH5155UqxhZmD4dWDEtsySenFFFerHVHks0JL/AE/W/GVpoy+H/DNpbiya4R4bSGIu8lpuAZmk24DNxzkYBxkYqLwVocvhW6sDrNro17eXmpRwwMJILsxx+VJuxywBzt6oenWiilJ2dgsNS607UvC/hm71YpZ6lNfXBS+COEVlnEhi2hdiq3mE/KGIIAxzxk/EvWF0i+0/SoreCa90++ubVhcI5aEC581dqs2BkNjhRjOOtFFFTYI7nT6NrbJLEzsN7PmR2fKEnJOFA4HbGK1ddg/4SK3vf3K28TKybHzgMBnKgcADaPzoorzaqXKd9CTVQ8b+yXn/ADxaiiiuD2aPrPrlTyP/2Q==" alt="Logo" />
+            <!-- Covers the embedded watermark (only in normal view) -->
+            <div class="logo-block"></div>
+
+            <!-- SportLink watermark (visible in both modes) -->
+            <div class="sportlink-watermark">
+                <div class="watermark-text">
+                    <span class="watermark-sport">Sport</span><span class="watermark-link">Link</span>
+                </div>
             </div>
         </div>
 
@@ -205,4 +243,4 @@
     document.getElementById('playerShell').addEventListener('click', ()=>{ setTimeout(enterFullscreen,300); }, {once:true});
 </script>
 </body>
-</html>
+    </html>
