@@ -82,86 +82,73 @@
             border: none; display: block;
         }
 
-        /* Watermark blocker - covers "All In One Reborn" */
+        /* ── WATERMARK BLOCKER — gradient fade, no black box ── */
         .logo-block {
             position: absolute;
-            top: 0; 
+            top: 0;
             right: 0;
             width: 220px;
             height: 80px;
-            background: #000;
+            /* Fade from transparent on the left to opaque on the right,
+               matching the dark video edge so it's invisible to viewers */
+            background: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.92) 40%, #000 100%);
             z-index: 10;
             pointer-events: none;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 10px 12px 0 0;
         }
 
-        /* SportLink logo watermark - small, bottom right, semi-transparent */
+        /* SportLink brand label inside the blocker */
+        .block-brand {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            opacity: 0.55;
+        }
+        .block-brand-sport { font-size: 12px; font-weight: 800; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+        .block-brand-link  { font-size: 12px; font-weight: 800; color: #e8000d; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* SportLink watermark — bottom right, subtle */
         .sportlink-watermark {
             position: absolute;
             bottom: 80px;
             right: 20px;
             z-index: 15;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.35;
             transition: opacity 0.3s;
         }
-        
         .watermark-text {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #fff;
+            font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #fff;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            gap: 3px;
+            display: flex; align-items: center; gap: 3px;
         }
-        
         .watermark-sport { color: #fff; }
-        .watermark-link { color: #e8000d; }
+        .watermark-link  { color: #e8000d; }
 
-        /* Desktop fullscreen - hide blocker */
+        /* Desktop fullscreen — keep branding, hide blocker */
         .player-shell:fullscreen .logo-block,
         .player-shell:-webkit-full-screen .logo-block,
         .player-shell:-moz-full-screen .logo-block,
-        .player-shell:-ms-fullscreen .logo-block {
-            display: none;
-        }
+        .player-shell:-ms-fullscreen .logo-block { display: none; }
 
-        /* Desktop fullscreen - adjust SportLink watermark */
         .player-shell:fullscreen .sportlink-watermark,
         .player-shell:-webkit-full-screen .sportlink-watermark,
         .player-shell:-moz-full-screen .sportlink-watermark,
         .player-shell:-ms-fullscreen .sportlink-watermark {
-            opacity: 0.6;
-            bottom: 20px;
+            opacity: 0.5; bottom: 20px;
         }
 
-        /* Mobile landscape - keep blocker visible and adjust size */
+        /* Mobile landscape */
         @media screen and (orientation: landscape) and (max-width: 1024px) {
-            .logo-block {
-                width: 280px;
-                height: 100px;
-            }
-            
-            .sportlink-watermark {
-                bottom: 15px;
-                right: 15px;
-                opacity: 0.5;
-            }
-            
-            .watermark-text {
-                font-size: 13px;
-            }
+            .logo-block { width: 280px; height: 100px; }
+            .sportlink-watermark { bottom: 15px; right: 15px; opacity: 0.45; }
+            .watermark-text { font-size: 13px; }
         }
-
-        /* Extra coverage for very small landscape screens */
         @media screen and (orientation: landscape) and (max-height: 500px) {
-            .logo-block {
-                width: 25%;
-                height: 25%;
-                min-width: 200px;
-                min-height: 80px;
-            }
+            .logo-block { width: 25%; height: 25%; min-width: 200px; min-height: 80px; }
         }
 
         .controls {
@@ -235,10 +222,14 @@
                 frameborder="0">
             </iframe>
 
-            <!-- Covers the embedded watermark (stays visible on mobile landscape) -->
-            <div class="logo-block" id="logoBlock"></div>
+            <!-- Gradient blocker — no black box, fades naturally into the video edge -->
+            <div class="logo-block" id="logoBlock">
+                <div class="block-brand">
+                    <span class="block-brand-sport">Sport</span><span class="block-brand-link">Link</span>
+                </div>
+            </div>
 
-            <!-- SportLink watermark (visible in all modes) -->
+            <!-- Bottom-right SportLink watermark -->
             <div class="sportlink-watermark">
                 <div class="watermark-text">
                     <span class="watermark-sport">Sport</span><span class="watermark-link">Link</span>
@@ -263,39 +254,33 @@
         const f = document.getElementById('streamFrame');
         f.src = f.src;
     }
-    
+
     function enterFullscreen(){
         const w = document.getElementById('playerShell');
         const f = document.getElementById('streamFrame');
         const go = el => (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen||function(){}).call(el);
         go(w) || go(f);
     }
-    
-    // Monitor orientation changes to ensure blocker stays visible on mobile
-    window.addEventListener('orientationchange', function() {
-        setTimeout(function() {
-            adjustBlockerSize();
-        }, 100);
-    });
-    
+
+    window.addEventListener('orientationchange', () => setTimeout(adjustBlockerSize, 100));
     window.addEventListener('resize', adjustBlockerSize);
-    
+
     function adjustBlockerSize() {
         const blocker = document.getElementById('logoBlock');
         const isLandscape = window.innerWidth > window.innerHeight;
         const isMobile = window.innerWidth <= 1024;
-        
         if (isLandscape && isMobile) {
-            // Mobile landscape - make blocker bigger to ensure coverage
-            blocker.style.width = '280px';
+            blocker.style.width  = '280px';
             blocker.style.height = '100px';
+        } else {
+            blocker.style.width  = '';
+            blocker.style.height = '';
         }
     }
-    
-    // Initial adjustment
+
     adjustBlockerSize();
-    
-    document.getElementById('playerShell').addEventListener('click', ()=>{ setTimeout(enterFullscreen,300); }, {once:true});
+
+    document.getElementById('playerShell').addEventListener('click', () => { setTimeout(enterFullscreen, 300); }, { once: true });
 </script>
 </body>
 </html>
