@@ -82,12 +82,13 @@
             border: none; display: block;
         }
 
-        /* Watermark blocker - only visible in normal mode, hidden in fullscreen */
+        /* Watermark blocker - covers "All In One Reborn" */
         .logo-block {
             position: absolute;
-            top: 0; right: 0;
-            width: 200px;
-            height: 70px;
+            top: 0; 
+            right: 0;
+            width: 220px;
+            height: 80px;
             background: #000;
             z-index: 10;
             pointer-events: none;
@@ -118,7 +119,7 @@
         .watermark-sport { color: #fff; }
         .watermark-link { color: #e8000d; }
 
-        /* Hide watermark blocker in fullscreen, keep SportLink watermark */
+        /* Desktop fullscreen - hide blocker */
         .player-shell:fullscreen .logo-block,
         .player-shell:-webkit-full-screen .logo-block,
         .player-shell:-moz-full-screen .logo-block,
@@ -126,13 +127,41 @@
             display: none;
         }
 
-        /* Make SportLink watermark more visible in fullscreen */
+        /* Desktop fullscreen - adjust SportLink watermark */
         .player-shell:fullscreen .sportlink-watermark,
         .player-shell:-webkit-full-screen .sportlink-watermark,
         .player-shell:-moz-full-screen .sportlink-watermark,
         .player-shell:-ms-fullscreen .sportlink-watermark {
             opacity: 0.6;
             bottom: 20px;
+        }
+
+        /* Mobile landscape - keep blocker visible and adjust size */
+        @media screen and (orientation: landscape) and (max-width: 1024px) {
+            .logo-block {
+                width: 280px;
+                height: 100px;
+            }
+            
+            .sportlink-watermark {
+                bottom: 15px;
+                right: 15px;
+                opacity: 0.5;
+            }
+            
+            .watermark-text {
+                font-size: 13px;
+            }
+        }
+
+        /* Extra coverage for very small landscape screens */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .logo-block {
+                width: 25%;
+                height: 25%;
+                min-width: 200px;
+                min-height: 80px;
+            }
         }
 
         .controls {
@@ -158,7 +187,7 @@
             .controls{ flex-wrap:wrap; padding:14px 16px; gap:10px; }
             .btn{ padding:9px 16px; font-size:12px; }
             .stream-info{ display:none; }
-            .logo-block{ width:150px; height:55px; }
+            .logo-block{ width:180px; height:70px; }
             .sportlink-watermark{ bottom: 70px; right: 10px; }
             .watermark-text{ font-size: 12px; }
         }
@@ -206,10 +235,10 @@
                 frameborder="0">
             </iframe>
 
-            <!-- Covers the embedded watermark (only in normal view) -->
-            <div class="logo-block"></div>
+            <!-- Covers the embedded watermark (stays visible on mobile landscape) -->
+            <div class="logo-block" id="logoBlock"></div>
 
-            <!-- SportLink watermark (visible in both modes) -->
+            <!-- SportLink watermark (visible in all modes) -->
             <div class="sportlink-watermark">
                 <div class="watermark-text">
                     <span class="watermark-sport">Sport</span><span class="watermark-link">Link</span>
@@ -234,13 +263,39 @@
         const f = document.getElementById('streamFrame');
         f.src = f.src;
     }
+    
     function enterFullscreen(){
         const w = document.getElementById('playerShell');
         const f = document.getElementById('streamFrame');
         const go = el => (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen||function(){}).call(el);
         go(w) || go(f);
     }
+    
+    // Monitor orientation changes to ensure blocker stays visible on mobile
+    window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+            adjustBlockerSize();
+        }, 100);
+    });
+    
+    window.addEventListener('resize', adjustBlockerSize);
+    
+    function adjustBlockerSize() {
+        const blocker = document.getElementById('logoBlock');
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isMobile = window.innerWidth <= 1024;
+        
+        if (isLandscape && isMobile) {
+            // Mobile landscape - make blocker bigger to ensure coverage
+            blocker.style.width = '280px';
+            blocker.style.height = '100px';
+        }
+    }
+    
+    // Initial adjustment
+    adjustBlockerSize();
+    
     document.getElementById('playerShell').addEventListener('click', ()=>{ setTimeout(enterFullscreen,300); }, {once:true});
 </script>
 </body>
-    </html>
+</html>
