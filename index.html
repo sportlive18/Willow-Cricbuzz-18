@@ -82,34 +82,6 @@
             border: none; display: block;
         }
 
-        /* ── WATERMARK BLOCKER — gradient fade, no black box ── */
-        .logo-block {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 220px;
-            height: 80px;
-            /* Fade from transparent on the left to opaque on the right,
-               matching the dark video edge so it's invisible to viewers */
-            background: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.92) 40%, #000 100%);
-            z-index: 10;
-            pointer-events: none;
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-end;
-            padding: 10px 12px 0 0;
-        }
-
-        /* SportLink brand label inside the blocker */
-        .block-brand {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            opacity: 0.55;
-        }
-        .block-brand-sport { font-size: 12px; font-weight: 800; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
-        .block-brand-link  { font-size: 12px; font-weight: 800; color: #e8000d; letter-spacing: 1px; text-transform: uppercase; }
-
         /* SportLink watermark — bottom right, subtle */
         .sportlink-watermark {
             position: absolute;
@@ -128,12 +100,7 @@
         .watermark-sport { color: #fff; }
         .watermark-link  { color: #e8000d; }
 
-        /* Desktop fullscreen — keep branding, hide blocker */
-        .player-shell:fullscreen .logo-block,
-        .player-shell:-webkit-full-screen .logo-block,
-        .player-shell:-moz-full-screen .logo-block,
-        .player-shell:-ms-fullscreen .logo-block { display: none; }
-
+        /* Desktop fullscreen */
         .player-shell:fullscreen .sportlink-watermark,
         .player-shell:-webkit-full-screen .sportlink-watermark,
         .player-shell:-moz-full-screen .sportlink-watermark,
@@ -143,12 +110,8 @@
 
         /* Mobile landscape */
         @media screen and (orientation: landscape) and (max-width: 1024px) {
-            .logo-block { width: 280px; height: 100px; }
             .sportlink-watermark { bottom: 15px; right: 15px; opacity: 0.45; }
             .watermark-text { font-size: 13px; }
-        }
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .logo-block { width: 25%; height: 25%; min-width: 200px; min-height: 80px; }
         }
 
         .controls {
@@ -174,7 +137,6 @@
             .controls{ flex-wrap:wrap; padding:14px 16px; gap:10px; }
             .btn{ padding:9px 16px; font-size:12px; }
             .stream-info{ display:none; }
-            .logo-block{ width:180px; height:70px; }
             .sportlink-watermark{ bottom: 70px; right: 10px; }
             .watermark-text{ font-size: 12px; }
         }
@@ -215,21 +177,14 @@
         <div class="player-shell" id="playerShell">
             <iframe
                 id="streamFrame"
-                src= "https://sportlink-willow-cricbuzz-10.pages.dev/"
+                src="https://sportlink-willow-cricbuzz-10.pages.dev/"
                 allowfullscreen
                 allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                 scrolling="no"
                 frameborder="0">
             </iframe>
 
-            <!-- Gradient blocker — no black box, fades naturally into the video edge -->
-            <div class="logo-block" id="logoBlock">
-                <div class="block-brand">
-                    <span class="block-brand-sport">Sport</span><span class="block-brand-link">Link</span>
-                </div>
-            </div>
-
-            <!-- Bottom-right SportLink watermark -->
+            <!-- Bottom-right SportLink watermark only -->
             <div class="sportlink-watermark">
                 <div class="watermark-text">
                     <span class="watermark-sport">Sport</span><span class="watermark-link">Link</span>
@@ -261,24 +216,6 @@
         const go = el => (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen||function(){}).call(el);
         go(w) || go(f);
     }
-
-    window.addEventListener('orientationchange', () => setTimeout(adjustBlockerSize, 100));
-    window.addEventListener('resize', adjustBlockerSize);
-
-    function adjustBlockerSize() {
-        const blocker = document.getElementById('logoBlock');
-        const isLandscape = window.innerWidth > window.innerHeight;
-        const isMobile = window.innerWidth <= 1024;
-        if (isLandscape && isMobile) {
-            blocker.style.width  = '280px';
-            blocker.style.height = '100px';
-        } else {
-            blocker.style.width  = '';
-            blocker.style.height = '';
-        }
-    }
-
-    adjustBlockerSize();
 
     document.getElementById('playerShell').addEventListener('click', () => { setTimeout(enterFullscreen, 300); }, { once: true });
 </script>
